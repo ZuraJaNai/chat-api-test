@@ -31,12 +31,12 @@ user.statics.findByCredentials = async function findByCredentials(
 ) {
   const currUser = await this.findOne({ email });
   if (!currUser) {
-    throw new Error({ error: 'Invalid email' });
+    throw new Error('Invalid email');
   }
   const currPass = Buffer.from(currUser.password, 'hex').toString();
   const isPasswordMatch = password === currPass;
   if (!isPasswordMatch) {
-    throw new Error({ error: 'Invalid password' });
+    throw new Error('Invalid password');
   }
   return currUser;
 };

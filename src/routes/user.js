@@ -41,9 +41,8 @@ router.post('/signin', async (req, res) => {
     const currUser = await User.findByCredentials(email, password);
     const token = await currUser.generateAuthToken();
     res.send({ currUser, token });
-  } catch (error) {
-    console.log(error);
-    res.status(400).send(error);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 });
 
