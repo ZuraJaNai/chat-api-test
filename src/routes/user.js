@@ -38,10 +38,11 @@ router.post('/signup', async (req, res) => {
 router.post('/signin', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const currUser = User.findByCredentials(email, password);
+    const currUser = await User.findByCredentials(email, password);
     const token = await currUser.generateAuthToken();
     res.send({ currUser, token });
   } catch (error) {
+    console.log(error);
     res.status(400).send(error);
   }
 });

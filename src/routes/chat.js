@@ -8,11 +8,10 @@ const User = require('../models/user');
 // @route GET /chat
 // @desc get list of chats for current user
 // @access Private
-router.get('/:userId', (req, res) => {
-  // TODO: change param to current user(after login functionality)
-  const currentUser = User.find({ _id: req.params.userId });
+router.get('/', (req, res) => {
+  const currentUser = User.find({ _id: req.user.id });
   Chat.find({ users: currentUser })
-    .then(results => res.status(200).json(results))
+    .then(results => res.status(200).json(JSON.stringify(results)))
     .catch(err => res.status(500).json(err));
 });
 

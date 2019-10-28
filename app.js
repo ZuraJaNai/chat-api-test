@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const user = require('./src/routes/user');
 const chat = require('./src/routes/chat');
+const auth = require('./src/middleware/auth');
 require('dotenv').config();
 
 const app = express();
@@ -30,6 +31,6 @@ mongoose
 
 // Routes
 app.use('/', user);
-app.use('/chat', chat);
+app.use('/chat', auth, chat);
 
 app.listen(port, () => console.log(`Server up and running on port ${port} !`));
