@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 
 const user = new mongoose.Schema({
   username: { type: String, unique: true, required: true },
@@ -10,7 +9,7 @@ const user = new mongoose.Schema({
 });
 
 // Hash the password before saving the user model
-user.pre('save', async function(next) {
+user.pre('save', async function pre(next) {
   const currUser = this;
   if (currUser.isModified('password')) {
     const bufStr = Buffer.from(currUser.password, 'utf8');
@@ -20,7 +19,7 @@ user.pre('save', async function(next) {
 });
 
 // Generate an auth token for the user
-user.methods.generateAuthToken = async function() {
+user.methods.generateAuthToken = async function generateAuthToken() {
   const currUser = this;
   const token = jwt.sign({ _id: currUser._id }, process.env.JWT_KEY);
   // currUser.token = token;
@@ -29,7 +28,10 @@ user.methods.generateAuthToken = async function() {
 };
 
 // Search for a user by email and password.
-user.statics.findByCredentials = async function(email, password) {
+user.statics.findByCredentials = async function findByCredentials(
+  email,
+  password,
+) {
   const currUser = await this.findOne({ email });
   if (!currUser) {
     throw new Error({ error: 'Invalid email' });

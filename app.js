@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const user = require('./src/routes/user');
 const chat = require('./src/routes/chat');
 const message = require('./src/routes/message');
@@ -17,6 +18,9 @@ app.use(
   }),
 );
 app.use(bodyParser.json());
+
+// Enabling CORS for all requests
+app.use(cors());
 
 // Connect to MongoDB
 mongoose
