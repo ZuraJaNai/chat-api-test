@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const user = require('./src/routes/user');
 const chat = require('./src/routes/chat');
-const { dbURI } = require('./src/config/mongodb');
+require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -21,7 +21,10 @@ mongoose
   .set('useNewUrlParser', true)
   .set('useFindAndModify', false)
   .set('useCreateIndex', true)
-  .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONGODB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log('MongoDB successfully connected'))
   .catch(err => console.log(err));
 
