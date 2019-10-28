@@ -8,9 +8,13 @@ const Chat = require('../models/chat');
 // @route GET /message/:messageId
 // @desc Get message by id
 // @access Private
-router.get('/:messageId', (req, res) => {
+router.get('/:messageId', (req, res, next) => {
   Message.findById(req.params.messageId)
-    .then(results => res.status(200).json(results))
+    .then(results => {
+      req.body.response = results;
+      res.status(200);
+      next();
+    })
     .catch(err => res.status(500).json(err));
 });
 
@@ -18,17 +22,19 @@ router.get('/:messageId', (req, res) => {
 // @desc Create new message,
 //       request body must contain message and chatId
 // @access Private
-router.post('/', (req, res) => {
+router.post('/', (req, res, next) => {
   Message.create({
     user: req.user.id,
     message_body: req.body.message,
   })
-    .then(response => {
+    .then(results => {
       Chat.updateOne(
         { _id: req.body.chatId },
-        { $push: { messages: response._id } },
+        { $push: { messages: results._id } },
       );
-      res.status(201).json(response);
+      req.body.response = results;
+      res.status(201);
+      next();
     })
     .catch(err => res.status(500).json(err));
 });
@@ -37,13 +43,15 @@ router.post('/', (req, res) => {
 // @desc Update existing message
 //       request body must contain new message
 // @access Private
-router.put('/:messageId', (req, res) => {
+router.put('/:messageId', (req, res, next) => {
   Message.updateOne(
     { _id: req.params.messageId },
     { $set: { message_body: req.body.message } },
   )
-    .then(response => {
-      res.status(200).json(response);
+    .then(results => {
+      req.body.response = results;
+      res.status(200);
+      next();
     })
     .catch(err => res.status(500).json(err));
 });

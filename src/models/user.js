@@ -5,7 +5,6 @@ const user = new mongoose.Schema({
   username: { type: String, unique: true, required: true },
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true },
-  // token: { type: String, required: true },
 });
 
 // Hash the password before saving the user model
@@ -22,8 +21,6 @@ user.pre('save', async function pre(next) {
 user.methods.generateAuthToken = async function generateAuthToken() {
   const currUser = this;
   const token = jwt.sign({ _id: currUser._id }, process.env.JWT_KEY);
-  // currUser.token = token;
-  // currUser.save();
   return token;
 };
 
