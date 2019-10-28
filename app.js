@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const users = require('./src/routes/users');
+const user = require('./src/routes/user');
+const chat = require('./src/routes/chat');
 const { dbURI } = require('./src/config/mongodb');
 
 const app = express();
@@ -25,6 +26,7 @@ mongoose
   .catch(err => console.log(err));
 
 // Routes
-app.use('/', users);
+app.use('/', user);
+app.use('/chat', chat);
 
 app.listen(port, () => console.log(`Server up and running on port ${port} !`));
